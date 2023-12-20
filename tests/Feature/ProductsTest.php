@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Category;
 use App\Models\Favorite;
 use App\Models\Product;
 use App\Models\User;
@@ -21,6 +22,7 @@ class ProductsTest extends TestCase
     {
         parent::setUp();
 
+        Category::factory(3)->create();
         Product::factory(5)->create();
 
         User::create([

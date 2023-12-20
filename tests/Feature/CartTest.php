@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Cart;
 use App\Models\CartItem;
+use App\Models\Category;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -22,6 +23,7 @@ class CartTest extends TestCase
     {
         parent::setUp();
         Sanctum::actingAs(User::factory()->create());
+        Category::factory(3)->create();
     }
 
     /**

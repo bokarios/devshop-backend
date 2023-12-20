@@ -1,10 +1,10 @@
 <?php
 
+use App\Http\Controllers\AdminsAuthController;
+use App\Http\Controllers\AdminsProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductsController;
-use App\Http\Controllers\ServicesController;
 use App\Http\Controllers\UsersAuthController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,10 +17,6 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
 
 // Auth routes
 Route::prefix('auth')->group(function () {
@@ -50,4 +46,32 @@ Route::prefix('cart')->middleware('auth:sanctum')->group(function () {
     Route::put('update/{id}', [CartController::class, 'updateItem']);
     Route::delete('delete/{id}', [CartController::class, 'deleteItem']);
     Route::post('reset/{id}', [CartController::class, 'resetCart']);
+});
+
+##############################################################################
+##############################################################################
+
+/**
+ * Admin Routes
+ */
+
+Route::prefix('admin')->group(function () {
+    // Auth routes
+    Route::prefix('auth')->group(function () {
+        Route::post('login', [AdminsAuthController::class, 'login']);
+
+        Route::middleware('auth:sanctum')->group(function () {
+            Route::post('logout', [AdminsAuthController::class, 'logout']);
+            Route::post('password/change', [AdminsAuthController::class, 'changePassword']);
+        });
+    });
+
+    // Product routes
+    Route::prefix('products')->middleware('auth:sanctum')->group(function () {
+        Route::get('', [AdminsProductController::class, 'GetAllProducts']);
+        Route::get('{id}', [AdminsProductController::class, 'GetOneProduct']);
+        Route::post('', [AdminsProductController::class, 'addProduct']);
+        Route::put('{id}', [AdminsProductController::class, 'editProduct']);
+        Route::delete('{id}', [AdminsProductController::class, 'deleteProduct']);
+    });
 });

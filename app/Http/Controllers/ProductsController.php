@@ -50,7 +50,7 @@ class ProductsController extends Controller
             return response()->json([], 404);
         } catch (\Throwable $th) {
             throw $th;
-            return response()->json(['status' => 'error', 'message' => $th->getMessage()], 500);
+            $this->serverError($th->getMessage());
         }
     }
 
@@ -91,7 +91,7 @@ class ProductsController extends Controller
             return response()->json(['status' => 'success']);
         } catch (\Throwable $th) {
             throw $th;
-            return response()->json(['status' => 'error', 'message' => $th->getMessage()], 500);
+            $this->serverError($th->getMessage());
         }
     }
 
@@ -113,7 +113,7 @@ class ProductsController extends Controller
             return response()->json([], 404);
         } catch (\Throwable $th) {
             throw $th;
-            return response()->json(['status' => 'error', 'message' => $th->getMessage()], 500);
+            $this->serverError($th->getMessage());
         }
     }
 }

@@ -29,7 +29,7 @@ class CartController extends Controller
             return response()->json(['status' => 'success', 'cartItems' => $cart_items]);
         } catch (\Throwable $th) {
             throw $th;
-            return response()->json(['status' => 'error', 'message' => $th->getMessage()], 500);
+            $this->serverError($th->getMessage());
         }
     }
 
@@ -64,7 +64,7 @@ class CartController extends Controller
             return response()->json(['status' => 'success', 'cartItem' => $cart_item], 201);
         } catch (\Throwable $th) {
             throw $th;
-            return response()->json(['status' => 'error', 'message' => $th->getMessage()], 500);
+            $this->serverError($th->getMessage());
         }
     }
 
@@ -84,7 +84,7 @@ class CartController extends Controller
             return response()->json(['status' => 'success', 'cartItem' => $cart_item->refresh()]);
         } catch (\Throwable $th) {
             throw $th;
-            return response()->json(['status' => 'error', 'message' => $th->getMessage()], 500);
+            $this->serverError($th->getMessage());
         }
     }
 
@@ -103,7 +103,7 @@ class CartController extends Controller
             return response()->json(['status' => 'success']);
         } catch (\Throwable $th) {
             throw $th;
-            return response()->json(['status' => 'error', 'message' => $th->getMessage()], 500);
+            $this->serverError($th->getMessage());
         }
     }
 
@@ -119,7 +119,7 @@ class CartController extends Controller
             return response()->json(['status' => 'success']);
         } catch (\Throwable $th) {
             throw $th;
-            return response()->json(['status' => 'error', 'message' => $th->getMessage()], 500);
+            $this->serverError($th->getMessage());
         }
     }
 }
