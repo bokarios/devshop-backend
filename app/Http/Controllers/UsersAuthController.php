@@ -28,7 +28,7 @@ class UsersAuthController extends Controller
 
             return response()->json(['status' => 'fail', 'message' => 'Invalid email or password'], 401);
         } catch (\Throwable $th) {
-            throw $th;
+            // throw $th;
             $this->serverError($th->getMessage());
         }
     }
@@ -53,7 +53,7 @@ class UsersAuthController extends Controller
 
             return $this->fail('Failed to register');
         } catch (\Throwable $th) {
-            throw $th;
+            // throw $th;
             $this->serverError($th->getMessage());
         }
     }
@@ -66,7 +66,7 @@ class UsersAuthController extends Controller
         try {
             auth()->user()->tokens()->delete();
         } catch (\Throwable $th) {
-            throw $th;
+            // throw $th;
             $this->serverError($th->getMessage());
         }
 
@@ -87,7 +87,7 @@ class UsersAuthController extends Controller
 
             return $this->fail('Failed to change password');
         } catch (\Throwable $th) {
-            throw $th;
+            // throw $th;
             $this->serverError($th->getMessage());
         }
     }

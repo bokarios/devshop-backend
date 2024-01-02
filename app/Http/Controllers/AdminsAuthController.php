@@ -29,7 +29,7 @@ class AdminsAuthController extends Controller
 
             return response()->json(['status' => 'fail', 'message' => 'Invalid email or password'], 401);
         } catch (\Throwable $th) {
-            throw $th;
+            // throw $th;
             $this->serverError($th->getMessage());
         }
     }
@@ -42,7 +42,7 @@ class AdminsAuthController extends Controller
         try {
             $request->user()->tokens()->delete();
         } catch (\Throwable $th) {
-            throw $th;
+            // throw $th;
             $this->serverError($th->getMessage());
         }
 
@@ -63,7 +63,7 @@ class AdminsAuthController extends Controller
 
             return $this->fail('Password change failed');
         } catch (\Throwable $th) {
-            throw $th;
+            // throw $th;
             $this->serverError($th->getMessage());
         }
     }

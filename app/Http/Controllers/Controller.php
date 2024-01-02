@@ -17,7 +17,7 @@ class Controller extends BaseController
      * @param mixed $data
      * @param int $code
      */
-    public function success($data, $code = 200)
+    public function success($data = [], $code = 200)
     {
         return response()->json($data, $code);
     }

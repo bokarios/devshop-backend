@@ -12,6 +12,17 @@ class Product extends Model
     protected $fillable = ['name', 'short_description', 'description', 'price', 'image', 'featured', 'category_id'];
 
     /**
+     * Custom field slug
+     */
+    public function slug()
+    {
+        $slug = $this->name;
+        $slug = strtolower(str_replace(' ', '-', $slug));
+
+        return $this->id . '-' . $slug;
+    }
+
+    /**
      * Has many favorites
      */
     public function favorites()
@@ -25,5 +36,13 @@ class Product extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    /**
+     * Has many variations
+     */
+    public function variations()
+    {
+        return $this->hasMany(ProductVariation::class);
     }
 }

@@ -3,37 +3,32 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AddFavoriteRequest;
+use App\Http\Resources\ProductResource;
+use App\Models\Category;
 use App\Models\Favorite;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Translation\Exception\NotFoundResourceException;
 
-class ProductsController extends Controller
+class UsersProductController extends Controller
 {
     /**
      * Get all products
      */
     public function getAllProducts(Request $request)
     {
-        $products = Product::all();
+        try {
+            $products = Product::all();
 
-        // Filter by q (query)
-        if ($request->q && $request->q !== '') {
-            $products->where('name', $request->q)
-                ->orWhere('description', $request->q);
+            $request->featured && $products = $products->where('featured', '=', (int) $request->featured ?? 0);
+
+            return $this->success(['status' => 'success', 'products' => ProductResource::collection($products)]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return $this->serverError($th->getMessage());
         }
-
-        // Filter by price minimum
-        if ($request->min && $request->min !== '') {
-            $products->where('price', '>=', $request->min);
-        }
-
-        // Filter by price maximum
-        if ($request->max && $request->max !== '') {
-            $products->where('price', '<=', $request->max);
-        }
-
-        return response()->json(['status' => 'success', 'products' => $products]);
     }
 
     /**
@@ -44,13 +39,13 @@ class ProductsController extends Controller
         try {
             $product = Product::findOrFail($id);
 
-            return response()->json(['status' => 'success', 'product' => $product]);
+            return $this->success(['status' => 'success', 'product' => new ProductResource($product)]);
         } catch (NotFoundResourceException $ex) {
-            throw $ex;
-            return response()->json([], 404);
+            // throw $ex;
+            return $this->fail('Not found', 404);
         } catch (\Throwable $th) {
-            throw $th;
-            $this->serverError($th->getMessage());
+            // throw $th;
+            return $this->serverError($th->getMessage());
         }
     }
 
@@ -68,8 +63,8 @@ class ProductsController extends Controller
 
             return response()->json(['status' => 'fail', 'message' => 'Something wrong happened'], 400);
         } catch (\Throwable $th) {
-            throw $th;
-            return response()->json(['status' => 'error', 'message' => $th->getMessage(), 500]);
+            // throw $th;
+            return $this->serverError($th->getMessage());
         }
     }
 
@@ -90,7 +85,7 @@ class ProductsController extends Controller
             Favorite::create(['product_id' => $request->product_id, 'user_id' => $request->user()->id]);
             return response()->json(['status' => 'success']);
         } catch (\Throwable $th) {
-            throw $th;
+            // throw $th;
             $this->serverError($th->getMessage());
         }
     }
@@ -112,7 +107,7 @@ class ProductsController extends Controller
 
             return response()->json([], 404);
         } catch (\Throwable $th) {
-            throw $th;
+            // throw $th;
             $this->serverError($th->getMessage());
         }
     }

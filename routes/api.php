@@ -1,9 +1,10 @@
 <?php
 
 use App\Http\Controllers\AdminsAuthController;
+use App\Http\Controllers\AdminsCategoryController;
+use App\Http\Controllers\AdminsColorController;
 use App\Http\Controllers\AdminsProductController;
-use App\Http\Controllers\CartController;
-use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\UsersProductController;
 use App\Http\Controllers\UsersAuthController;
 use Illuminate\Support\Facades\Route;
 
@@ -30,25 +31,17 @@ Route::prefix('auth')->group(function () {
 
 // Products routes
 Route::prefix('products')->group(function () {
-    Route::get('', [ProductsController::class, 'getAllProducts']);
-    Route::get('{id}', [ProductsController::class, 'getOneProduct']);
+    Route::get('', [UsersProductController::class, 'getAllProducts']);
+    Route::get('{id}', [UsersProductController::class, 'getOneProduct']);
     Route::middleware('auth:sanctum')->group(function () {
-        Route::get('favorites/show', [ProductsController::class, 'getFavorites']);
-        Route::delete('favorites/{id}', [ProductsController::class, 'removeFavorite']);
-        Route::post('favorites', [ProductsController::class, 'addFavorite']);
+        Route::get('favorites/show', [UsersProductController::class, 'getFavorites']);
+        Route::delete('favorites/{id}', [UsersProductController::class, 'removeFavorite']);
+        Route::post('favorites', [UsersProductController::class, 'addFavorite']);
     });
 });
 
-// Cart routes
-Route::prefix('cart')->middleware('auth:sanctum')->group(function () {
-    Route::get('', [CartController::class, 'getItems']);
-    Route::post('add', [CartController::class, 'addItem']);
-    Route::put('update/{id}', [CartController::class, 'updateItem']);
-    Route::delete('delete/{id}', [CartController::class, 'deleteItem']);
-    Route::post('reset/{id}', [CartController::class, 'resetCart']);
-});
-
 ##############################################################################
+#########################  ADMIN ROUTES ######################################
 ##############################################################################
 
 /**
@@ -69,9 +62,34 @@ Route::prefix('admin')->group(function () {
     // Product routes
     Route::prefix('products')->middleware('auth:sanctum')->group(function () {
         Route::get('', [AdminsProductController::class, 'GetAllProducts']);
+        Route::get('{product}/variations', [AdminsProductController::class, 'getAllProductVariations']);
         Route::get('{id}', [AdminsProductController::class, 'GetOneProduct']);
         Route::post('', [AdminsProductController::class, 'addProduct']);
         Route::put('{id}', [AdminsProductController::class, 'editProduct']);
         Route::delete('{id}', [AdminsProductController::class, 'deleteProduct']);
+
+        Route::prefix('variation')->group(function () {
+            Route::post('', [AdminsProductController::class, 'addProductVariation']);
+            Route::put('{variation}', [AdminsProductController::class, 'editProductVariation']);
+            Route::delete('{variation}', [AdminsProductController::class, 'deleteProductVariation']);
+        });
+    });
+
+    // Category routes
+    Route::prefix('categories')->middleware('auth:sanctum')->group(function () {
+        Route::get('', [AdminsCategoryController::class, 'getAllCategories']);
+        Route::get('{category}', [AdminsCategoryController::class, 'getOneCategory']);
+        Route::post('', [AdminsCategoryController::class, 'addCategory']);
+        Route::put('{category}', [AdminsCategoryController::class, 'editCategory']);
+        Route::delete('{category}', [AdminsCategoryController::class, 'deleteCategory']);
+    });
+
+    // Color routes
+    Route::prefix('colors')->middleware('auth:sanctum')->group(function () {
+        Route::get('', [AdminsColorController::class, 'getAllColors']);
+        Route::get('{color}', [AdminsColorController::class, 'getOneColor']);
+        Route::post('', [AdminsColorController::class, 'addColor']);
+        Route::put('{color}', [AdminsColorController::class, 'editColor']);
+        Route::delete('{color}', [AdminsColorController::class, 'deleteColor']);
     });
 });
